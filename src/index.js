@@ -10,9 +10,6 @@ let cities = [];
 let cityWeather = []; // API cache
 let currentCity = 0; // Index of current city displayed
 const PropTypes = React.PropTypes;
-const calendarContainer = document.querySelector('.calendar-container');
-const containerWidth = calendarContainer.clientWidth;
-let trackWidth = 0;
 
 const GetDates = (startDate, daysToAdd, dir) => {
   let aryDates = [];
@@ -219,10 +216,17 @@ ReactDOM.render(
   document.querySelector('#app')
 );
 
+const calendarContainer = document.querySelector('.calendar-container');
+const calendarTrack = document.querySelector('.calendar-track');
+const containerWidth = calendarContainer.clientWidth;
+let trackWidth = 0;
+
 [...document.querySelectorAll('.calendar-block')].forEach( block => {
   trackWidth += block.offsetWidth;
 });
 
-TweenLite.set('.calendar-track', { width: trackWidth+1 }); //, x: -(trackWidth-containerWidth)/2
+
+TweenLite.set(calendarTrack, { width: trackWidth+1 });
+TweenLite.set(calendarContainer, { left: -(trackWidth-containerWidth)/2.2 });
 
 module.hot.accept();
