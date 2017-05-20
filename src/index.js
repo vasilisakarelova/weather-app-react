@@ -3,12 +3,16 @@ import ReactDOM from 'react-dom';
 import classNames from 'classnames'; // for building class names with dynamic data
 import Api from './utils/api';
 import { TweenLite, TweenMax, TimelineMax, TimelineLite } from 'gsap';
-import $ from 'jquery';
-const PropTypes = React.PropTypes;
+
+import draggable from './draggable';
 
 let cities = [];
 let cityWeather = []; // API cache
 let currentCity = 0; // Index of current city displayed
+const PropTypes = React.PropTypes;
+const calendarContainer = document.querySelector('.calendar-container');
+const containerWidth = calendarContainer.clientWidth;
+let trackWidth = 0;
 
 const GetDates = (startDate, daysToAdd, dir) => {
   let aryDates = [];
@@ -215,51 +219,8 @@ ReactDOM.render(
   document.querySelector('#app')
 );
 
-const containerWidth = document.querySelector('.calendar-container').clientWidth;
-let trackWidth = 0;
-
 [...document.querySelectorAll('.calendar-block')].forEach( block => {
   trackWidth += block.offsetWidth;
-});
-
-$(document).ready(function() {
-
-  $('.draggable').each(function() {
-    var $this = $(this);
-    $this.addClass('left right');
-    if ($this.width() < $this.find('.draggable-inner').outerWidth()) {
-      $this.removeClass('right');
-    } else {
-      $this.addClass('nodrag');
-    }
-  })
-
-  $('.draggable').on('mousedown', '.draggable-wrap', function(e) {
-    var $this = $(this);
-    var x = e.pageX-parseInt($this.css('left'));
-    $this.addClass('dragging').parents().on('mousemove', function(e) {
-      var $drag = $('.dragging');
-      var left = e.pageX-x;
-      $drag.closest('.draggable').removeClass('left right');
-      if (left > 0) {
-        left = 0;
-        $drag.closest('.draggable').addClass('left');
-
-      }
-      if (left < -$drag.find('.draggable-inner').outerWidth()+$drag.width()) {
-        left = -$drag.find('.draggable-inner').outerWidth()+$drag.width();
-        $drag.closest('.draggable').addClass('right');
-      }
-      $drag.css({left: left});
-      $drag.on('mouseup', function() {
-        $(this).removeClass('draggable');
-      });
-    });
-      e.preventDefault();
-  })
-  $(document).on('mouseup', function() {
-      $('.dragging').removeClass('dragging');
-  });
 });
 
 TweenLite.set('.calendar-track', { width: trackWidth+1 }); //, x: -(trackWidth-containerWidth)/2
