@@ -24,7 +24,7 @@ class Calendar extends Component {
     super(),
     this.state = {
       current: today,
-      days: this.middleRange(today, 5)
+      days: this.middleRange(today, 11)
     }
   }
 
@@ -44,7 +44,7 @@ class Calendar extends Component {
     let start_int = 0;
     let end_int = 0;
 
-    start_int = end_int = parseInt(i / 2, 10);
+    start_int = end_int = parseInt(i / 2, 11);
 
     if (i % 2 === 0) {
       end_int -= 1;
@@ -54,6 +54,28 @@ class Calendar extends Component {
     let end = moment(d).add('days', end_int);
 
     return this.range(start, end);
+  }
+
+  updatedates(ev) {
+    /*console.log(ev.currentTarget.childNodes[0].classList);*/
+    switch (true) {
+      case ev.currentTarget.classList.contains('right'):
+        let lastDaylisted = this.state.days.pop();
+        this.setState({
+          current: lastDaylisted,
+          days: this.middleRange(lastDaylisted, 11)
+        });
+
+        break;
+      case ev.currentTarget.classList.contains('left'):
+        let firstDaylisted = this.state.days.shift();
+        this.setState({
+          current: firstDaylisted,
+          days: this.middleRange(firstDaylisted, 11)
+        });
+
+        break;
+    }
   }
 
   render() {
@@ -90,12 +112,12 @@ class Calendar extends Component {
     });
 
     return (
-      <div className="calendar-container draggable-wrap">
-        <div className="calendar-track draggable-inner">
-          <div className="calendar-curr-month">
-
+      <div className="calendar-wrapper draggable" onMouseUp={ (ev) => this.updatedates(ev) }>
+        <div className="calendar-container draggable-wrap">
+          <div className="calendar-track draggable-inner">
+            <div className="calendar-curr-month"></div>
+            { daysTrack }
           </div>
-          { daysTrack }
         </div>
       </div>
     );

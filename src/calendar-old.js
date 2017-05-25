@@ -2,16 +2,6 @@ import React from 'react';
 import dates from './dates'
 
 export default class Calendar extends React.Component {
-  constructor(props) {
-    let today = dates.new();
-
-    super(props),
-    this.state = {
-      current: today,
-      days: dates.middleRange(today, 5)
-    }
-  }
-
   animate(transition, transform) {
     var wrapper = this.refs.wrapper.getDOMNode();
 
@@ -82,17 +72,6 @@ export default class Calendar extends React.Component {
       this.up(date);
     }
   }
-
-  handleOptionsButtonClick(e) {
-  var start = dates.new(this.state.current).subtract('days', 2);
-  var end = dates.new(date).add('days', 2);
-  var range = dates.range(start, end);
-   this.setState({
-       current: date,
-       days: range,
-     });
-     console.log(e);
-   }
 
   render() {
     const days = this.state.days.map((day) => {

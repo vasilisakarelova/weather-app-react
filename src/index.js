@@ -81,7 +81,7 @@ class Weather extends React.Component {
     return (
       <div className="weather-widget">
         <div className="weather-city"><h1 className="city-title">{ cities[currentCity] }</h1></div>
-        <div className="calendar-wrapper draggable"></div>
+        <Calendar />
         <section className="weather-details-container">
           { result }
         </section>
@@ -97,12 +97,7 @@ ReactDOM.render(
   document.querySelector('#app')
 );
 
-ReactDOM.render(
-  <Calendar />,
-  document.querySelector('.calendar-wrapper')
-);
-
-const calendarContainer = document.querySelector('.calendar-wrapper');
+const calendarContainer = document.querySelector('.calendar-container');
 const calendarTrack = document.querySelector('.calendar-track');
 const containerWidth = calendarContainer.clientWidth;
 let trackWidth = 0;
@@ -111,7 +106,7 @@ let trackWidth = 0;
   trackWidth += block.offsetWidth;
 });
 
-
-TweenLite.set(calendarTrack, { width: trackWidth });
+TweenLite.set(calendarContainer, { left: -(trackWidth - containerWidth)/2 });
+TweenLite.set(calendarTrack, { width: trackWidth+1 });
 
 module.hot.accept();
