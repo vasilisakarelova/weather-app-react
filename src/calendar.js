@@ -78,8 +78,9 @@ class Calendar extends Component {
       dragEnd: ev.screenX
     });
 
-    switch ((this.state.dragStart - this.state.dragEnd) < 0) {
-      case true:
+    let dragDistance = this.state.dragStart - this.state.dragEnd;
+    switch (true) {
+      case dragDistance < 0:
         let firstDaylisted = this.state.days.shift();
         this.setState({
           days: this.middleRange(firstDaylisted, 5).array,
@@ -88,13 +89,15 @@ class Calendar extends Component {
         });
 
         break;
-      case false:
+      case dragDistance > 0:
         let lastDaylisted = this.state.days.pop();
         this.setState({
           days: this.middleRange(lastDaylisted, 5).array,
           rangeMonth: this.middleRange(lastDaylisted, 5).month,
           rangeYear: this.middleRange(lastDaylisted, 5).year,
         });
+        break;
+      case dragDistance = 0:
         break;
     }
   }
@@ -111,7 +114,7 @@ class Calendar extends Component {
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
               </div>
-              <div className='calendar-date is-selected' onClick={ ev => console.log(ev.currentTarget) }>
+              <div className='calendar-date is-selected'>
                 {day.format('DD')}
               </div>
             </div>
@@ -123,7 +126,7 @@ class Calendar extends Component {
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
               </div>
-              <div className='calendar-date' onClick={ ev => console.log(ev.currentTarget) }>
+              <div className='calendar-date' >
                 {day.format('DD')}
               </div>
             </div>
