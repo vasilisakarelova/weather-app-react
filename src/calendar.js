@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { TweenLite } from 'gsap';
 import classNames from 'classnames';
 import moment from 'moment';
-import draggable from './draggable';
+import Draggable from 'react-draggable';
 
 moment.locale('ru');
 moment.updateLocale('ru', {
@@ -26,7 +27,9 @@ class Calendar extends Component {
       current: today,
       days: this.middleRange(today, 5).array,
       rangeMonth: this.middleRange(today, 5).month,
-      rangeYear: this.middleRange(today, 5).year
+      rangeYear: this.middleRange(today, 5).year,
+      dragStart: 0,
+      dragEnd: 0
     }
   }
 
@@ -64,19 +67,19 @@ class Calendar extends Component {
     };
   }
 
-  updatedates(ev) {
-    /*console.log(ev.currentTarget.childNodes[0].classList);*/
-    switch (true) {
-      case ev.currentTarget.classList.contains('right'):
-        let lastDaylisted = this.state.days.pop();
-        this.setState({
-          days: this.middleRange(lastDaylisted, 5).array,
-          rangeMonth: this.middleRange(lastDaylisted, 5).month,
-          rangeYear: this.middleRange(lastDaylisted, 5).year,
-        });
+  handleStartDrag(ev) {
+    this.setState({
+      dragStart: ev.screenX
+    });
+  }
 
-        break;
-      case ev.currentTarget.classList.contains('left'):
+  handleStopDrag(ev) {
+    this.setState({
+      dragEnd: ev.screenX
+    });
+
+    switch ((this.state.dragStart - this.state.dragEnd) < 0) {
+      case true:
         let firstDaylisted = this.state.days.shift();
         this.setState({
           days: this.middleRange(firstDaylisted, 5).array,
@@ -84,6 +87,14 @@ class Calendar extends Component {
           rangeYear: this.middleRange(firstDaylisted, 5).year
         });
 
+        break;
+      case false:
+        let lastDaylisted = this.state.days.pop();
+        this.setState({
+          days: this.middleRange(lastDaylisted, 5).array,
+          rangeMonth: this.middleRange(lastDaylisted, 5).month,
+          rangeYear: this.middleRange(lastDaylisted, 5).year,
+        });
         break;
     }
   }
@@ -100,7 +111,7 @@ class Calendar extends Component {
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
               </div>
-              <div className='calendar-date is-selected'>
+              <div className='calendar-date is-selected' onClick={ ev => console.log(ev.currentTarget) }>
                 {day.format('DD')}
               </div>
             </div>
@@ -112,7 +123,7 @@ class Calendar extends Component {
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
               </div>
-              <div className='calendar-date'>
+              <div className='calendar-date' onClick={ ev => console.log(ev.currentTarget) }>
                 {day.format('DD')}
               </div>
             </div>
@@ -122,14 +133,21 @@ class Calendar extends Component {
     });
 
     return (
-      <div className="calendar-wrapper draggable" onMouseUp={ (ev) => this.updatedates(ev) }>
+      <div className="calendar-wrapper">
         <div className="calendar-curr-month">
           { this.state.rangeMonth } { this.state.rangeYear }
         </div>
-        <div className="calendar-container draggable-wrap">
-          <div className="calendar-track draggable-inner">
-            { daysTrack }
-          </div>
+        <div className="calendar-container">
+          <Draggable
+            axis="x"
+            handle=".calendar-track"
+            bounds={{top: 0, left: 0, right: 0, bottom: 0}}
+            onMouseDown={(ev) => this.handleStartDrag(ev)}
+            onStop={(ev) => this.handleStopDrag(ev)}>
+            <div className="calendar-track">
+              { daysTrack }
+            </div>
+          </Draggable>
         </div>
       </div>
     );

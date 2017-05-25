@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames'; // for building class names with dynamic data
-import { TweenLite, TweenMax, TimelineMax, TimelineLite } from 'gsap';
+import { TweenLite } from 'gsap';
+import moment from 'moment';
 import Api from './utils/api';
 import Calendar from './calendar';
-import draggable from './draggable';
 
 const PropTypes = React.PropTypes;
 let cities = [];
@@ -52,30 +52,36 @@ class Weather extends React.Component {
   render() {
     const weatherHourly = this.state;
     let result = [];
+    let periods = [];
+    let now = moment().format('YYYY-MM-DD');
 
     Object.keys(weatherHourly).map((period) => {
-      if (period < 3) {
-        const temp = Math.round(weatherHourly[period].main.temp);
-        const humidity = Math.round(weatherHourly[period].main.humidity);
-        const windSpeed = weatherHourly[period].wind.speed;
-
-        result.push(
-          <div className="weather-details">
-            <div className="weather-param time">
-              <span className="title">День и время: </span><span className="number">{ weatherHourly[period].dt_txt }</span>
-            </div>
-            <div className="weather-param temp">
-              <span className="title">Температура воздуха: </span><span className="number">{ temp }°C</span>
-            </div>
-            <div className="weather-param humidity">
-              <span className="title">Уровень влажности: </span><span className="number">{ humidity }%</span>
-            </div>
-            <div className="weather-param wind">
-              <span className="title">Скорость ветра: </span><span className="number">{ windSpeed } м/с</span>
-            </div>
-          </div>
-        );
+      if ((weatherHourly[period].dt_txt).match(now)) {
+        periods.push(period);
       }
+    });
+
+    periods.slice(0, 3).forEach(period => {
+      const temp = Math.round(weatherHourly[period].main.temp);
+      const humidity = Math.round(weatherHourly[period].main.humidity);
+      const windSpeed = weatherHourly[period].wind.speed;
+
+      result.push(
+        <div className="weather-details">
+          <div className="weather-param time">
+            <span className="title">День и время: </span><span className="number">{ weatherHourly[period].dt_txt }</span>
+          </div>
+          <div className="weather-param temp">
+            <span className="title">Температура воздуха: </span><span className="number">{ temp }°C</span>
+          </div>
+          <div className="weather-param humidity">
+            <span className="title">Уровень влажности: </span><span className="number">{ humidity }%</span>
+          </div>
+          <div className="weather-param wind">
+            <span className="title">Скорость ветра: </span><span className="number">{ windSpeed } м/с</span>
+          </div>
+        </div>
+      );
     });
 
     return (
@@ -97,16 +103,13 @@ ReactDOM.render(
   document.querySelector('#app')
 );
 
-const calendarContainer = document.querySelector('.calendar-container');
 const calendarTrack = document.querySelector('.calendar-track');
-const containerWidth = calendarContainer.clientWidth;
 let trackWidth = 0;
 
 [...document.querySelectorAll('.calendar-block')].forEach( block => {
   trackWidth += block.offsetWidth;
 });
 
-TweenLite.set(calendarContainer, { left: -(trackWidth - containerWidth)/2 });
 TweenLite.set(calendarTrack, { width: trackWidth+1 });
 
 module.hot.accept();
