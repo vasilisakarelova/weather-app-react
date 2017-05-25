@@ -87,7 +87,7 @@ class Weather extends React.Component {
           const windSpeed = weatherHourly[period].wind.speed;
 
           result.push(
-            <div className="weather-details">
+            <div className="weather-details" key={weatherHourly[period].dt}>
               <div className="weather-param time">
                 <span className="title">День и время: </span><span className="number">{ weatherHourly[period].dt_txt }</span>
               </div>

@@ -33165,7 +33165,7 @@ var Weather = function (_React$Component) {
 
             result.push(_react2.default.createElement(
               'div',
-              { className: 'weather-details' },
+              { className: 'weather-details', key: weatherHourly[period].dt },
               _react2.default.createElement(
                 'div',
                 { className: 'weather-param time' },
@@ -46907,7 +46907,7 @@ var Calendar = function (_Component) {
           case day.isSame(_this2.state.selected, 'day'):
             daysTrack.push(_react2.default.createElement(
               'div',
-              { className: calendarBlock },
+              { className: calendarBlock, key: day.format('YYYY-MM-DD') },
               _react2.default.createElement(
                 'div',
                 { className: 'calendar-day-of-week' },
@@ -46923,7 +46923,7 @@ var Calendar = function (_Component) {
           default:
             daysTrack.push(_react2.default.createElement(
               'div',
-              { className: calendarBlock },
+              { className: calendarBlock, key: day.format('YYYY-MM-DD') },
               _react2.default.createElement(
                 'div',
                 { className: 'calendar-day-of-week' },

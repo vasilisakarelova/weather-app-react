@@ -125,7 +125,7 @@ class Calendar extends Component {
       switch (true) {
         case day.isSame(this.state.selected, 'day'):
           daysTrack.push(
-            <div className={calendarBlock}>
+            <div className={calendarBlock} key={day.format('YYYY-MM-DD')}>
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
               </div>
@@ -137,7 +137,7 @@ class Calendar extends Component {
           break;
         default:
           daysTrack.push(
-            <div className={calendarBlock}>
+            <div className={calendarBlock} key={day.format('YYYY-MM-DD')}>
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
               </div>
