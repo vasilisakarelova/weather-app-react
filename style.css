@@ -38,9 +38,9 @@ body {
 .calendar-container {
   position: relative;
   display: block;
-  padding: 1em 1em 0;
+  padding: 1em 0;
+  margin: 0;
   height: auto;
-  width: calc(100% - 2em);
   font-size: .8em;
 }
 
@@ -82,7 +82,7 @@ body {
   margin: 0 auto;
 }
 
-.is-today {
+.is-selected {
   border: 1px solid lightgrey;
   border-radius: 50%;
 }

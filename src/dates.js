@@ -1,17 +1,6 @@
 import moment from 'moment';
 
 window.dates = {
-  new: function (s) {
-    return moment(s).startOf('day');
-  },
-
-  format: function (d, f) {
-    if (!d) {
-      return '';
-    }
-    return moment(d).format(f || 'YYYY-MM-DD');
-  },
-
   range: function (start, end) {
 
     var current = moment(start);
