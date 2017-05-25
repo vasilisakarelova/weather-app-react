@@ -1,134 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames'; // for building class names with dynamic data
-import Api from './utils/api';
 import { TweenLite, TweenMax, TimelineMax, TimelineLite } from 'gsap';
-
+import Api from './utils/api';
+import Calendar from './calendar';
 import draggable from './draggable';
 
+const PropTypes = React.PropTypes;
 let cities = [];
 let cityWeather = []; // API cache
 let currentCity = 0; // Index of current city displayed
-const PropTypes = React.PropTypes;
-
-const GetDates = (startDate, daysToAdd, dir) => {
-  let aryDates = [];
-
-  for(let i = 1; i <= daysToAdd; i++) {
-    const currentDate = new Date();
-    switch (dir) {
-      case 'future':
-        currentDate.setDate(startDate.getDate() + i);
-        break;
-       case 'past':
-       currentDate.setDate(startDate.getDate() - i);
-       break;
-    }
-    aryDates.push({ day: DayAsString(currentDate.getDay()), date: currentDate.getDate(), month: MonthAsString(currentDate.getMonth()), year: currentDate.getFullYear()});
-  }
-
-  return aryDates;
-}
-
-const MonthAsString = (monthIndex) => {
-    const d = new Date();
-    const month = new Array();
-    month[0]="январь";
-    month[1]="февраль";
-    month[2]="март";
-    month[3]="апрель";
-    month[4]="май";
-    month[5]="июнь";
-    month[6]="июль";
-    month[7]="август";
-    month[8]="сентябрь";
-    month[9]="октябрь";
-    month[10]="ноябрь";
-    month[11]="декабрь";
-
-    return month[monthIndex];
-}
-
-const DayAsString = (dayIndex) => {
-    const weekdays = new Array(7);
-    weekdays[0] = "вс";
-    weekdays[1] = "пн";
-    weekdays[2] = "вт";
-    weekdays[3] = "ср";
-    weekdays[4] = "чт";
-    weekdays[5] = "пт";
-    weekdays[6] = "суб";
-
-    return weekdays[dayIndex];
-}
-
-class CalendarBlocks extends React.Component {
-  getNextDays(startDate) {
-    const datesArr = GetDates(startDate, 12, 'future');
-    let futureDates = [];
-
-    datesArr.forEach(calendarDate => {
-      futureDates.push(
-        <div className="calendar-block">
-          <div className="calendar-day-of-week">{ calendarDate.day }</div>
-          <div className="calendar-date">{ calendarDate.date }</div>
-        </div>
-      );
-    });
-
-    return futureDates;
-  }
-
-  getPreviousDays(startDate) {
-    const datesArr = GetDates(startDate, 10, 'past');
-    let pastDates = [];
-
-    datesArr.forEach(calendarDatePast => {
-      pastDates.push(
-        <div className="calendar-block">
-          <div className="calendar-day-of-week">{ calendarDatePast.day }</div>
-          <div className="calendar-date">{ calendarDatePast.date }</div>
-        </div>
-      );
-    });
-
-    return (pastDates.reverse());
-  }
-
-  render() {
-    const startDate = new Date();
-
-    return (
-      <div>
-        { this.getPreviousDays(startDate) }
-        <div className="calendar-block">
-          <div className="calendar-day-of-week">{ DayAsString(startDate.getDay()) }</div>
-          <div className="calendar-date is-today">{ startDate.getDate() }</div>
-        </div>
-        { this.getNextDays(startDate) }
-      </div>
-    );
-  }
-}
-
-class CalendarContainer extends React.Component {
-  render() {
-    const startDate = new Date();
-
-    return (
-      <div>
-        <div className="calendar-curr-month">{ MonthAsString(startDate.getMonth()) } { startDate.getFullYear() }</div>
-        <div className="draggable">
-          <div className="calendar-container draggable-wrap">
-            <div className="calendar-track draggable-inner">
-              <CalendarBlocks />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
 
 class Weather extends React.Component {
   constructor() {
@@ -199,8 +80,8 @@ class Weather extends React.Component {
 
     return (
       <div className="weather-widget">
-        <div className="weather-city"><h1 className="city-title">{cities[currentCity]}</h1></div>
-        <CalendarContainer />
+        <div className="weather-city"><h1 className="city-title">{ cities[currentCity] }</h1></div>
+        <div id="datepicker-wrapper"></div>
         <section className="weather-details-container">
           { result }
         </section>
@@ -216,17 +97,9 @@ ReactDOM.render(
   document.querySelector('#app')
 );
 
-const calendarContainer = document.querySelector('.calendar-container');
-const calendarTrack = document.querySelector('.calendar-track');
-const containerWidth = calendarContainer.clientWidth;
-let trackWidth = 0;
-
-[...document.querySelectorAll('.calendar-block')].forEach( block => {
-  trackWidth += block.offsetWidth;
-});
-
-
-TweenLite.set(calendarTrack, { width: trackWidth+1 });
-TweenLite.set(calendarContainer, { left: -(trackWidth-containerWidth)/2.2 });
+ReactDOM.render(
+  <Calendar />,
+  document.querySelector('#datepicker-wrapper')
+);
 
 module.hot.accept();
