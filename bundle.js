@@ -46991,7 +46991,7 @@ exports.default = Calendar;
 'use strict';
 
 var Fetch = __webpack_require__(307);
-var rootUrl = 'http://api.openweathermap.org/data/2.5/forecast?q=';
+var rootUrl = '//api.openweathermap.org/data/2.5/forecast?q=';
 var apiUrl = '&units=metric&appid=0e9caf1a1c80d8826059849971fae213';
 
 module.exports = {
