@@ -46772,6 +46772,8 @@ var Calendar = function (_Component) {
       dragStart: 0,
       dragEnd: 0
     };
+
+    _this.handleSubmitButton = _this.handleSubmitButton.bind(_this);
     return _this;
   }
 
@@ -46849,6 +46851,17 @@ var Calendar = function (_Component) {
       }
     }
   }, {
+    key: 'handleSubmitButton',
+    value: function handleSubmitButton(event) {
+      event.preventDefault();
+
+      // By giving the input the `ref` attribute, we can access it anywhere
+      var textInputValue = this.refs.input.value;
+
+      // Submit the value to the parent component
+      this.props.handleSubmitButton(textInputValue);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -46885,7 +46898,7 @@ var Calendar = function (_Component) {
               ),
               _react2.default.createElement(
                 'div',
-                { className: 'calendar-date' },
+                { className: 'calendar-date', 'data-moment': day.format('YYYY-MM-DD') },
                 day.format('DD')
               )
             ));

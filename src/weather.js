@@ -13,7 +13,12 @@ let currentCity = 0; // Index of current city displayed
 class Weather extends React.Component {
   constructor() {
     super(),
-    this.state = {}
+    this.state = {
+      cityWeather: {},
+      selectDate: moment().format('YYYY-MM-DD')
+    }
+
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   fetchData() {
@@ -34,7 +39,7 @@ class Weather extends React.Component {
   updateData() {
     // Update the data for the UI
     // cityWeather[currentCity] - array, where each element is a collection of data for one period of time (3h)
-    this.setState( cityWeather[currentCity].list );
+    this.setState({ cityWeather: cityWeather[currentCity].list });
   }
 
   componentWillMount() {
@@ -48,19 +53,24 @@ class Weather extends React.Component {
     this.fetchData();
   }
 
+  handleSubmit(dateMoment) {
+    this.setState({
+      selectDate: dateMoment
+    })
+  }
+
   render() {
-    const weatherHourly = this.state;
+    const weatherHourly = this.state.cityWeather;
     let result = [];
     let periods = [];
-    let now = moment().format('YYYY-MM-DD');
 
     Object.keys(weatherHourly).map((period) => {
-      if ((weatherHourly[period].dt_txt).match(now)) {
+      if ((weatherHourly[period].dt_txt).match(this.state.selectDate)) {
         periods.push(period);
       }
     });
 
-    periods.slice(0, 3).forEach(period => {
+    periods.forEach(period => {
       const temp = Math.round(weatherHourly[period].main.temp);
       const humidity = Math.round(weatherHourly[period].main.humidity);
       const windSpeed = weatherHourly[period].wind.speed;
@@ -86,7 +96,7 @@ class Weather extends React.Component {
     return (
       <div className="weather-widget">
         <div className="weather-city"><h1 className="city-title">{ cities[currentCity] }</h1></div>
-        <Calendar />
+        <Calendar handleSubmitButton={ this.handleSubmit }/>
         <section className="weather-details-container">
           { result }
         </section>

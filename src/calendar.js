@@ -24,13 +24,15 @@ class Calendar extends Component {
 
     super(),
     this.state = {
-      current: today,
+      selected: today,
       days: this.middleRange(today, 5).array,
       rangeMonth: this.middleRange(today, 5).month,
       rangeYear: this.middleRange(today, 5).year,
       dragStart: 0,
       dragEnd: 0
     }
+
+    this.handleSubmitButton = this.handleSubmitButton.bind(this);
   }
 
   range(start, end) {
@@ -102,19 +104,32 @@ class Calendar extends Component {
     }
   }
 
+  handleSubmitButton(event) {
+    event.preventDefault();
+
+    // By giving the input the `ref` attribute, we can access it anywhere
+    const dateMoment = event.currentTarget.dataset.moment;
+    this.setState({
+      selected: dateMoment
+    });
+
+    // Submit the value to the parent component
+    this.props.handleSubmitButton(dateMoment);
+  }
+
   render() {
     let calendarBlock = 'calendar-block';
     let daysTrack = [];
 
     const days = this.state.days.forEach((day) => {
       switch (true) {
-        case day.isSame(this.state.current, 'day'):
+        case day.isSame(this.state.selected, 'day'):
           daysTrack.push(
             <div className={calendarBlock}>
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
               </div>
-              <div className='calendar-date is-selected'>
+              <div className='calendar-date is-selected' data-moment={day.format('YYYY-MM-DD')} onClick={this.handleSubmitButton}>
                 {day.format('DD')}
               </div>
             </div>
@@ -126,7 +141,7 @@ class Calendar extends Component {
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
               </div>
-              <div className='calendar-date' >
+              <div className='calendar-date' data-moment={day.format('YYYY-MM-DD')} onClick={this.handleSubmitButton}>
                 {day.format('DD')}
               </div>
             </div>
