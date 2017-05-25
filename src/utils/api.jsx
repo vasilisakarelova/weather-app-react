@@ -1,5 +1,5 @@
 const Fetch = require('whatwg-fetch');
-const rootUrl = '//api.openweathermap.org/data/2.5/forecast?q=';
+const rootUrl = 'http://api.openweathermap.org/data/2.5/forecast?q=';
 const apiUrl = '&units=metric&appid=0e9caf1a1c80d8826059849971fae213';
 
 module.exports = {
