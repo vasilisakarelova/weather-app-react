@@ -38,10 +38,10 @@ body {
 .calendar-container {
   position: relative;
   display: block;
-  padding: 1em 0;
   margin: 0;
   height: auto;
   font-size: .8em;
+  color: #2F4F4F;
 }
 
 .calendar-track {
@@ -69,8 +69,12 @@ body {
 .calendar-curr-month {
   text-align: left;
   font-size: .8em;
-  padding: 1em 1em 0;
   text-transform: uppercase;
+  display: block;
+  padding: .8em 0;
+  color: #2F4F4F;
+  width: 90%;
+  margin: .5em auto;
 }
 
 .calendar-date {
@@ -102,7 +106,7 @@ body {
   display: block;
   padding: .8em 0;
   border: 1px solid lightgrey;
-  color: darkslategrey;
+  color: #2F4F4F;
   width: 90%;
   margin: .5em auto;
 }

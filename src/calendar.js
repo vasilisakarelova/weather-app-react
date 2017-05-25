@@ -24,7 +24,9 @@ class Calendar extends Component {
     super(),
     this.state = {
       current: today,
-      days: this.middleRange(today, 11)
+      days: this.middleRange(today, 5).array,
+      rangeMonth: this.middleRange(today, 5).month,
+      rangeYear: this.middleRange(today, 5).year
     }
   }
 
@@ -44,7 +46,7 @@ class Calendar extends Component {
     let start_int = 0;
     let end_int = 0;
 
-    start_int = end_int = parseInt(i / 2, 11);
+    start_int = end_int = parseInt(i / 2, 6);
 
     if (i % 2 === 0) {
       end_int -= 1;
@@ -52,8 +54,14 @@ class Calendar extends Component {
 
     let start = moment(d).subtract('days', start_int);
     let end = moment(d).add('days', end_int);
+    let rangeMonth = moment(start).format('MMMM');
+    let rangeYear = moment(start).format('YYYY');
 
-    return this.range(start, end);
+    return {
+      array: this.range(start, end),
+      month: rangeMonth,
+      year: rangeYear
+    };
   }
 
   updatedates(ev) {
@@ -62,16 +70,18 @@ class Calendar extends Component {
       case ev.currentTarget.classList.contains('right'):
         let lastDaylisted = this.state.days.pop();
         this.setState({
-          current: lastDaylisted,
-          days: this.middleRange(lastDaylisted, 11)
+          days: this.middleRange(lastDaylisted, 5).array,
+          rangeMonth: this.middleRange(lastDaylisted, 5).month,
+          rangeYear: this.middleRange(lastDaylisted, 5).year,
         });
 
         break;
       case ev.currentTarget.classList.contains('left'):
         let firstDaylisted = this.state.days.shift();
         this.setState({
-          current: firstDaylisted,
-          days: this.middleRange(firstDaylisted, 11)
+          days: this.middleRange(firstDaylisted, 5).array,
+          rangeMonth: this.middleRange(firstDaylisted, 5).month,
+          rangeYear: this.middleRange(firstDaylisted, 5).year
         });
 
         break;
@@ -113,9 +123,11 @@ class Calendar extends Component {
 
     return (
       <div className="calendar-wrapper draggable" onMouseUp={ (ev) => this.updatedates(ev) }>
+        <div className="calendar-curr-month">
+          { this.state.rangeMonth } { this.state.rangeYear }
+        </div>
         <div className="calendar-container draggable-wrap">
           <div className="calendar-track draggable-inner">
-            <div className="calendar-curr-month"></div>
             { daysTrack }
           </div>
         </div>
