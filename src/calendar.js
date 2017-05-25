@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import moment from 'moment';
-import dates from './dates';
 import draggable from './draggable';
 
 moment.locale('ru');
@@ -10,6 +9,12 @@ moment.updateLocale('ru', {
   weekdays : [
     "вс", "пн", "вт", "ср", "чт", "пт", "сб"
   ]
+});
+moment.updateLocale('ru', {
+    months : [
+        "январь", "февраль", "март", "апрель", "май", "июнь", "июль",
+        "август", "сентябрь", "октябрь", "ноябрь", "декабрь"
+    ]
 });
 
 class Calendar extends Component {
@@ -19,18 +24,46 @@ class Calendar extends Component {
     super(),
     this.state = {
       current: today,
-      days: dates.middleRange(today, 5)
+      days: this.middleRange(today, 5)
     }
+  }
+
+  range(start, end) {
+    let current = moment(start);
+    let r = [];
+
+    while (current <= end) {
+      r.push(moment(current));
+      current.add('days', 1);
+    }
+
+    return r;
+  }
+
+  middleRange(d, i) {
+    let start_int = 0;
+    let end_int = 0;
+
+    start_int = end_int = parseInt(i / 2, 10);
+
+    if (i % 2 === 0) {
+      end_int -= 1;
+    }
+
+    let start = moment(d).subtract('days', start_int);
+    let end = moment(d).add('days', end_int);
+
+    return this.range(start, end);
   }
 
   render() {
     let calendarBlock = 'calendar-block';
-    let result = [];
+    let daysTrack = [];
 
     const days = this.state.days.forEach((day) => {
       switch (true) {
         case day.isSame(this.state.current, 'day'):
-          result.push(
+          daysTrack.push(
             <div className={calendarBlock}>
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
@@ -42,7 +75,7 @@ class Calendar extends Component {
           )
           break;
         default:
-          result.push(
+          daysTrack.push(
             <div className={calendarBlock}>
               <div className="calendar-day-of-week">
                 {day.format('dddd')}
@@ -59,7 +92,10 @@ class Calendar extends Component {
     return (
       <div className="calendar-container draggable-wrap">
         <div className="calendar-track draggable-inner">
-          { result }
+          <div className="calendar-curr-month">
+
+          </div>
+          { daysTrack }
         </div>
       </div>
     );
