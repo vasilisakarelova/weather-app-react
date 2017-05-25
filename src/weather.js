@@ -61,6 +61,8 @@ class Weather extends React.Component {
 
   render() {
     const weatherHourly = this.state.cityWeather;
+    const today = moment().subtract('days', 1);
+    const inFiveDays = moment().add('days', 5);
     let result = [];
     let periods = [];
 
@@ -70,28 +72,39 @@ class Weather extends React.Component {
       }
     });
 
-    periods.forEach(period => {
-      const temp = Math.round(weatherHourly[period].main.temp);
-      const humidity = Math.round(weatherHourly[period].main.humidity);
-      const windSpeed = weatherHourly[period].wind.speed;
+    switch (today.isAfter(moment(this.state.selectDate)) || inFiveDays.isBefore(moment(this.state.selectDate))) {
+      case true:
+        result.push(
+          <div className="weather-details">
+            <span className="title">К сожалению, информация о погоде в прошедшие дни, а также дальше, чем через 5 дней, отсутвует.</span>
+          </div>
+        );
+        break;
+      case false:
+        periods.forEach(period => {
+          const temp = Math.round(weatherHourly[period].main.temp);
+          const humidity = Math.round(weatherHourly[period].main.humidity);
+          const windSpeed = weatherHourly[period].wind.speed;
 
-      result.push(
-        <div className="weather-details">
-          <div className="weather-param time">
-            <span className="title">День и время: </span><span className="number">{ weatherHourly[period].dt_txt }</span>
-          </div>
-          <div className="weather-param temp">
-            <span className="title">Температура воздуха: </span><span className="number">{ temp }°C</span>
-          </div>
-          <div className="weather-param humidity">
-            <span className="title">Уровень влажности: </span><span className="number">{ humidity }%</span>
-          </div>
-          <div className="weather-param wind">
-            <span className="title">Скорость ветра: </span><span className="number">{ windSpeed } м/с</span>
-          </div>
-        </div>
-      );
-    });
+          result.push(
+            <div className="weather-details">
+              <div className="weather-param time">
+                <span className="title">День и время: </span><span className="number">{ weatherHourly[period].dt_txt }</span>
+              </div>
+              <div className="weather-param temp">
+                <span className="title">Температура воздуха: </span><span className="number">{ temp }°C</span>
+              </div>
+              <div className="weather-param humidity">
+                <span className="title">Уровень влажности: </span><span className="number">{ humidity }%</span>
+              </div>
+              <div className="weather-param wind">
+                <span className="title">Скорость ветра: </span><span className="number">{ windSpeed } м/с</span>
+              </div>
+            </div>
+          );
+        });
+        break;
+    }
 
     return (
       <div className="weather-widget">
