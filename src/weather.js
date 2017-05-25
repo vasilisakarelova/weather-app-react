@@ -6,7 +6,6 @@ import moment from 'moment';
 import Api from './utils/api';
 import Calendar from './calendar';
 
-const PropTypes = React.PropTypes;
 let cities = [];
 let cityWeather = []; // API cache
 let currentCity = 0; // Index of current city displayed
