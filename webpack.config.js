@@ -1,7 +1,5 @@
 module.exports = {
   entry: [
-    'webpack-dev-server/client?http://localhost:8080',
-    'webpack/hot/only-dev-server',
     './src/weather.js'
   ],
   module: {
@@ -18,9 +16,5 @@ module.exports = {
     path: __dirname ,
     publicPath: '/',
     filename: 'bundle.js'
-  },
-  devServer: {
-    contentBase: './',
-    hot: true
   }
 };
